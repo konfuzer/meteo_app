@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Погода{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Прогноз погоды</h2>
+
+<div class="mb-4">
+    <input id="city-input" class="form-control" placeholder="Введите город (например: Москва)" autocomplete="off">
+    <div id="autocomplete-list" class="list-group"></div>
+</div>
+
+<div id="weather-output" class="mb-4"></div>
+
+<div id="map" style="height: 400px;"></div>
+{% endblock %}
