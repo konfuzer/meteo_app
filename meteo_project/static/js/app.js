@@ -27,23 +27,26 @@ document.addEventListener('DOMContentLoaded', function () {
         return codes[code] || "❓";
     }
 
-    function renderWeather(data) {
-        const current = data.current;
-        const location = data.location;
-
-        const now = new Date(data.timestamp);
-        const localDateTime = new Intl.DateTimeFormat('ru-RU', {
+    function formatDateTimeLocal(isoStr) {
+        const date = new Date(isoStr);
+        return date.toLocaleString('ru-RU', {
             day: 'numeric',
             month: 'long',
             hour: '2-digit',
             minute: '2-digit',
             hour12: false
-        }).format(new Date(now));
+        });
+    }
+
+    function renderWeather(data) {
+        const current = data.current;
+        const location = data.location;
+        const localTime = data.hourly.time[0];  // в ISO формате, уже локальное время города
 
         const weatherHTML = `
             <div class="weather-card">
                 <h4>${location.name}, ${location.country}</h4>
-                <p><strong>📅</strong> ${localDateTime}</p>
+                <p><strong>📅</strong> ${formatDateTimeLocal(localTime)}</p>
                 <p><strong>🌡️ Температура:</strong> ${current.temperature}°C</p>
                 <p><strong>🌧️ Осадки:</strong> ${current.precipitation} мм</p>
                 <p><strong>💧 Влажность:</strong> ${current.humidity}%</p>
@@ -137,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 300);
     });
 
+    // Загрузка последнего города
     const lastCity = localStorage.getItem("last_city");
     if (lastCity) {
         input.value = lastCity;
