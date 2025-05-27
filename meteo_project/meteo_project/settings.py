@@ -1,15 +1,15 @@
 import os
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-1234567890-!замени-это-на-настоящий!'
+SECRET_KEY = 'django-insecure-1234567890-!'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']  # Для разработки, потом ограничим
+ALLOWED_HOSTS = ['*']  
 
-# Приложения
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -17,11 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Сторонние
     'rest_framework',
-
-    # Наше
     'weather',
 ]
 
@@ -34,8 +30,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'weather.middleware.UserCityHistoryMiddleware',  # наше собственное
 ]
 
 ROOT_URLCONF = 'meteo_project.urls'
@@ -44,7 +38,7 @@ ROOT_URLCONF = 'meteo_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # шаблоны тут
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -59,7 +53,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'meteo_project.wsgi.application'
 
-# БД: пока SQLite, можно будет заменить
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -67,19 +60,17 @@ DATABASES = {
     }
 }
 
-# Пароли и прочее — оставим как есть
 AUTH_PASSWORD_VALIDATORS = []
 
-# Язык и часовой пояс
 LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-# Статика
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

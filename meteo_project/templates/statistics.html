@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">📊 История поисков</h2>
+    <table class="table table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>Город</th>
+                <th>Координаты</th>
+                <th>Сколько раз</th>
+                <th>Последний поиск</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in history %}
+            <tr>
+                <td>{{ item.full_name }}</td>
+                <td>{{ item.latitude }}, {{ item.longitude }}</td>
+                <td>{{ item.search_count }}</td>
+                <td>{{ item.last_searched|date:"d.m.Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

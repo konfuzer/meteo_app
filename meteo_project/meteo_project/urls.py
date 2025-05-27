@@ -3,5 +3,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('weather.urls')),  # подключаем маршруты из weather
+    path('', include('weather.urls')),
 ]

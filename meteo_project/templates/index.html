@@ -1,15 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}Погода{% endblock %}
+{% block title %}Meteo app{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Прогноз погоды</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-6">
+            <input id="city-input" class="form-control" placeholder="Введите город (например: Москва)" autocomplete="off">
+            <div id="autocomplete-list" class="list-group mt-1"></div>
+        </div>
+    </div>
 
-<div class="mb-4">
-    <input id="city-input" class="form-control" placeholder="Введите город (например: Москва)" autocomplete="off">
-    <div id="autocomplete-list" class="list-group"></div>
+    <div id="weather-output" class="mb-4"></div>
+
+    <h4 class="text-center mb-2">🗺️ Карта</h4>
+    <div id="map" style="height: 300px;" class="mb-4 rounded shadow-sm"></div>
+
+    <h4 class="text-center mb-2">⌚ Прогноз по часам</h4>
+    <div class="table-responsive mb-4">
+        <table class="table table-sm table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Время</th>
+                    <th>🌡️ Температура</th>
+                    <th>🌧️ Осадки</th>
+                    <th>Погода</th>
+                </tr>
+            </thead>
+            <tbody id="hourly-table"></tbody>
+        </table>
+    </div>
+
+    <h4 class="text-center mb-2">🔮 Прогноз на неделю</h4>
+    <div id="daily-forecast" class="d-flex flex-wrap justify-content-center gap-3 mb-5"></div>
 </div>
-
-<div id="weather-output" class="mb-4"></div>
-
-<div id="map" style="height: 400px;"></div>
 {% endblock %}
