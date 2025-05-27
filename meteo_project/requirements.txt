@@ -3,4 +3,5 @@ djangorestframework>=3.14
 psycopg2-binary==2.9.9
 pytest
 pytest-django
+pytz
 requests>=2.31.0
