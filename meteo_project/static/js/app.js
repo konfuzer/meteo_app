@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         marker = L.marker([lat, lon]).addTo(map);
     }
-    
+
     function getEmoji(code) {
         const codes = {
             0: "☀️", 1: "🌤️", 2: "🌥️", 3: "☁️", 45: "🌫️", 48: "🌫️",
@@ -31,9 +31,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const current = data.current;
         const location = data.location;
 
+        const now = new Date(data.timestamp);
+        const localDateTime = new Intl.DateTimeFormat('ru-RU', {
+            day: 'numeric',
+            month: 'long',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(new Date(now));
+
         const weatherHTML = `
             <div class="weather-card">
                 <h4>${location.name}, ${location.country}</h4>
+                <p><strong>📅</strong> ${localDateTime}</p>
                 <p><strong>🌡️ Температура:</strong> ${current.temperature}°C</p>
                 <p><strong>🌧️ Осадки:</strong> ${current.precipitation} мм</p>
                 <p><strong>💧 Влажность:</strong> ${current.humidity}%</p>
@@ -124,10 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         list.appendChild(div);
                     });
                 });
-        }, 300); // Задержка 300 мс
+        }, 300);
     });
 
-    // Загрузка последнего города
     const lastCity = localStorage.getItem("last_city");
     if (lastCity) {
         input.value = lastCity;
