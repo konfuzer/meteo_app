@@ -1,9 +1,12 @@
 import requests
-from django.utils import timezone
+
 from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.utils import timezone
+
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import SearchHistory
 from .serializers import SearchHistorySerializer
 from .utils.geo import geocode_city
