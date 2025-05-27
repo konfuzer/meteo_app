@@ -1,8 +1,7 @@
 import requests
-from datetime import datetime
 
-from django.utils import timezone
 from django.shortcuts import render
+from django.utils import timezone
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -19,7 +18,6 @@ class WeatherAPIView(APIView):
         if not city:
             return Response({'error': 'Город не указан'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Геокодинг города
         geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=ru&format=json"
         geo_data = requests.get(geo_url).json()
 
@@ -31,7 +29,6 @@ class WeatherAPIView(APIView):
         city_name = location['name']
         country = location.get('country', '')
 
-        # Получаем погодные данные
         forecast_url = (
             f"https://api.open-meteo.com/v1/forecast?"
             f"latitude={lat}&longitude={lon}&hourly=temperature_2m,precipitation,weathercode,"
@@ -40,22 +37,17 @@ class WeatherAPIView(APIView):
         )
         forecast_data = requests.get(forecast_url).json()
 
-        hourly_times = forecast_data['hourly']['time']
-        now = datetime.now()
-        now_str = now.strftime("%Y-%m-%dT%H:00")
-
-        # Безопасный поиск ближайшего времени
+        # Точное время
+        now = timezone.now()
+        current_hour = now.strftime("%Y-%m-%dT%H:00")
         try:
-            index_now = hourly_times.index(now_str)
+            index_now = forecast_data['hourly']['time'].index(current_hour)
         except ValueError:
-            index_now = min(
-                range(len(hourly_times)),
-                key=lambda i: abs(datetime.fromisoformat(hourly_times[i]) - now)
-            )
+            index_now = 0  # если не найдено — fallback
 
-        # Сохраняем статистику
+        # Сохраняем историю
         full_name = f"{city_name}, {country}"
-        history, _ = SearchHistory.objects.get_or_create(
+        history, created = SearchHistory.objects.get_or_create(
             full_name=full_name,
             defaults={
                 'city_name': city,
@@ -119,7 +111,6 @@ class WeatherStatisticsAPIView(APIView):
 def statistics_page(request):
     queryset = SearchHistory.objects.all().order_by('-search_count')
     return render(request, 'statistics.html', {'history': queryset})
-
 
 def index(request):
     return render(request, 'index.html')

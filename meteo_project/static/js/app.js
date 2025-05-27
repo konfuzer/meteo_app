@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         marker = L.marker([lat, lon]).addTo(map);
     }
-
+    
     function getEmoji(code) {
         const codes = {
             0: "☀️", 1: "🌤️", 2: "🌥️", 3: "☁️", 45: "🌫️", 48: "🌫️",
@@ -27,26 +27,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return codes[code] || "❓";
     }
 
-    function formatDateTimeLocal(isoStr) {
-        const date = new Date(isoStr);
-        return date.toLocaleString('ru-RU', {
-            day: 'numeric',
-            month: 'long',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-    }
-
     function renderWeather(data) {
         const current = data.current;
         const location = data.location;
-        const localTime = data.hourly.time[data.index_now]; // ⏰ реальное местное время города
 
         const weatherHTML = `
             <div class="weather-card">
                 <h4>${location.name}, ${location.country}</h4>
-                <p><strong>📅</strong> ${formatDateTimeLocal(localTime)}</p>
                 <p><strong>🌡️ Температура:</strong> ${current.temperature}°C</p>
                 <p><strong>🌧️ Осадки:</strong> ${current.precipitation} мм</p>
                 <p><strong>💧 Влажность:</strong> ${current.humidity}%</p>
@@ -69,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `).join('');
         document.getElementById("daily-forecast").innerHTML = dailyHTML;
 
-        // Почасовой прогноз
+        // Прогноз по часам
         const hourly = data.hourly;
         const hourlyHTML = hourly.time.map((time, index) => `
             <tr>
@@ -81,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `).join('');
         document.getElementById("hourly-table").innerHTML = hourlyHTML;
 
+        // Отрисовка карты
         initMap(location.latitude, location.longitude);
     }
 
@@ -105,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return new Date(datetimeStr).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     }
 
+    // Автозаполнение
     const input = document.getElementById('city-input');
     const list = document.getElementById('autocomplete-list');
 
@@ -135,9 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         list.appendChild(div);
                     });
                 });
-        }, 300);
+        }, 300); // Задержка 300 мс
     });
 
+    // Загрузка последнего города
     const lastCity = localStorage.getItem("last_city");
     if (lastCity) {
         input.value = lastCity;
