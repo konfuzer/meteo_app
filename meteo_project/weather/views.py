@@ -1,6 +1,6 @@
 import requests
-from datetime import datetime
 
+from datetime import datetime
 from django.utils import timezone
 from django.shortcuts import render
 
@@ -43,11 +43,11 @@ class WeatherAPIView(APIView):
         # Получаем список часовых меток из прогноза
         hourly_times = forecast_data['hourly']['time']
 
-        # Определяем текущее локальное время с обнулением минут
-        now_local = timezone.localtime()
-        current_hour = now_local.replace(minute=0, second=0, microsecond=0)
+        # Текущее локальное время города (в формате ISO от open-meteo уже корректно)
+        now_utc = timezone.now()
+        current_hour = now_utc.replace(minute=0, second=0, microsecond=0)
 
-        # Ищем ближайший индекс по времени
+        # Ищем ближайший индекс в прогнозе
         try:
             index_now = hourly_times.index(current_hour.strftime("%Y-%m-%dT%H:00"))
         except ValueError:
@@ -93,7 +93,8 @@ class WeatherAPIView(APIView):
                 'precipitation': forecast_data['hourly']['precipitation'][:24],
                 'weathercode': forecast_data['hourly']['weathercode'][:24],
             },
-            'daily': forecast_data['daily']
+            'daily': forecast_data['daily'],
+            'index_now': index_now  # 👈 передаём индекс текущего часа
         }
 
         return Response(response_data)

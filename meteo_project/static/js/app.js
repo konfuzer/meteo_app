@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderWeather(data) {
         const current = data.current;
         const location = data.location;
-        const localTime = data.hourly.time[0];  // в ISO формате, уже локальное время города
+        const localTime = data.hourly.time[data.index_now]; // ⏰ реальное местное время города
 
         const weatherHTML = `
             <div class="weather-card">
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `).join('');
         document.getElementById("daily-forecast").innerHTML = dailyHTML;
 
-        // Прогноз по часам
+        // Почасовой прогноз
         const hourly = data.hourly;
         const hourlyHTML = hourly.time.map((time, index) => `
             <tr>
@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
         `).join('');
         document.getElementById("hourly-table").innerHTML = hourlyHTML;
 
-        // Отрисовка карты
         initMap(location.latitude, location.longitude);
     }
 
@@ -106,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return new Date(datetimeStr).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     }
 
-    // Автозаполнение
     const input = document.getElementById('city-input');
     const list = document.getElementById('autocomplete-list');
 
@@ -140,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 300);
     });
 
-    // Загрузка последнего города
     const lastCity = localStorage.getItem("last_city");
     if (lastCity) {
         input.value = lastCity;
